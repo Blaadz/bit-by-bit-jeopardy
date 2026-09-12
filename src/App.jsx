@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { initialCategories, initialTeams } from './data/questions';
 import { Terminal, RotateCcw, Play, Pause, CheckCircle2, XCircle, Eye, EyeOff, Plus, Minus, Lock, Key } from 'lucide-react';
 
-// SET YOUR MASTER PASSCODE HERE
+// MASTER PASSCODE 
 const MASTER_PASSCODE = "Hanahm2008"; 
 
 export default function App() {
