@@ -248,8 +248,8 @@ export const initialCategories = [
 ];
 
 export const initialTeams = [
-  { id: 't1', name: 'Team Alpha', score: 0 },
-  { id: 't2', name: 'Team Beta', score: 0 },
-  { id: 't3', name: 'Team Gamma', score: 0 },
-  { id: 't4', name: 'Team Delta', score: 0 },
+  { id: 't1', name: 'LGS 55 Main Team B', score: 0 },
+  { id: 't2', name: 'Sage Team A', score: 0 },
+  { id: 't3', name: 'ISL RR Team C', score: 0 },
+  { id: 't4', name: 'LGS Gulberg Team A', score: 0 },
 ];
