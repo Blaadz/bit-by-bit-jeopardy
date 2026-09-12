@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { initialCategories, initialTeams } from './data/questions';
 import { Terminal, RotateCcw, Play, Pause, CheckCircle2, XCircle, Eye, EyeOff, Plus, Minus, Lock, Key } from 'lucide-react';
 
-// MASTER PASSCODE 
+// SET YOUR MASTER PASSCODE HERE
 const MASTER_PASSCODE = "Hanahm2008"; 
 
 export default function App() {
@@ -194,9 +194,11 @@ export default function App() {
         </div>
       </header>
 
+      {/* 6 Category Columns Grid */}
       <main className="flex-1 grid grid-cols-6 gap-3 mb-6">
         {categories.map((category) => (
           <div key={category.id} className="flex flex-col gap-3">
+            {/* Category Header Box with Symmetrical Height */}
             <div className="h-16 bg-slate-900 border border-cyan-500/30 rounded-xl text-center font-bold text-xs md:text-sm text-cyan-300 shadow-lg uppercase tracking-wider font-mono flex items-center justify-center px-2 leading-tight">
               {category.title}
             </div>
@@ -206,7 +208,7 @@ export default function App() {
                 key={q.id}
                 onClick={() => handleSelectQuestion(category.id, q.id)}
                 disabled={q.completed}
-                className={`h-24 rounded-xl text-3xl font-black font-mono transition-all duration-150 border ${
+                className={`h-20 rounded-xl text-2xl font-black font-mono transition-all duration-150 border ${
                   q.completed
                     ? 'bg-slate-950/60 text-slate-800 border-slate-900 cursor-not-allowed'
                     : 'bg-slate-900 hover:bg-cyan-950/50 text-amber-400 hover:text-amber-300 border-slate-800 hover:border-cyan-500 hover:scale-[1.02] active:scale-[0.98] shadow-md cursor-pointer'
@@ -219,33 +221,37 @@ export default function App() {
         ))}
       </main>
 
-      <footer className="grid grid-cols-6 gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl backdrop-blur-md">
-        {teams.map((team) => (
-          <div key={team.id} className="bg-slate-950 border border-slate-800/80 p-3 rounded-xl flex flex-col items-center shadow-inner">
-            <span className="text-xs text-slate-400 font-mono uppercase tracking-widest font-bold">{team.name}</span>
-            <span className={`text-3xl font-black font-mono my-1 ${team.score >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>
-              ${team.score}
-            </span>
-            <div className="flex gap-1 mt-1">
-              <button
-                onClick={() => handleScoreChange(team.id, 100)}
-                className="bg-slate-900 hover:bg-emerald-950 border border-slate-700 hover:border-emerald-600 text-emerald-400 p-1.5 rounded transition"
-                title="Add 100"
-              >
-                <Plus className="w-3.5 h-3.5" />
-              </button>
-              <button
-                onClick={() => handleScoreChange(team.id, -100)}
-                className="bg-slate-900 hover:bg-rose-950 border border-slate-700 hover:border-rose-600 text-rose-400 p-1.5 rounded transition"
-                title="Deduct 100"
-              >
-                <Minus className="w-3.5 h-3.5" />
-              </button>
+      {/* Centered Footer */}
+      <footer className="w-full flex justify-center">
+        <div className="grid grid-cols-4 gap-4 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl backdrop-blur-md max-w-4xl w-full">
+          {teams.map((team) => (
+            <div key={team.id} className="bg-slate-950 border border-slate-800/80 p-3 rounded-xl flex flex-col items-center shadow-inner">
+              <span className="text-xs text-slate-400 font-mono uppercase tracking-widest font-bold">{team.name}</span>
+              <span className={`text-3xl font-black font-mono my-1 ${team.score >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>
+                ${team.score}
+              </span>
+              <div className="flex gap-1 mt-1">
+                <button
+                  onClick={() => handleScoreChange(team.id, 100)}
+                  className="bg-slate-900 hover:bg-emerald-950 border border-slate-700 hover:border-emerald-600 text-emerald-400 p-1.5 rounded transition"
+                  title="Add 100"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={() => handleScoreChange(team.id, -100)}
+                  className="bg-slate-900 hover:bg-rose-950 border border-slate-700 hover:border-rose-600 text-rose-400 p-1.5 rounded transition"
+                  title="Deduct 100"
+                >
+                  <Minus className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </footer>
 
+      {/* Question Overlay Modal */}
       {activeQuestion && (
         <div className="fixed inset-0 bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-6 z-50">
           <div className="bg-slate-900 border border-cyan-500/40 rounded-3xl max-w-4xl w-full p-8 shadow-2xl flex flex-col justify-between min-h-[580px]">
@@ -281,14 +287,14 @@ export default function App() {
             </div>
 
             <div className="my-8 flex flex-col items-center justify-center text-center px-4">
-              <p className="text-3xl md:text-4xl font-bold leading-relaxed text-slate-50 tracking-wide font-sans">
+              <p className="text-2xl md:text-3xl font-bold leading-relaxed text-slate-50 tracking-wide font-sans whitespace-pre-line">
                 {activeQuestion.question}
               </p>
 
               {showAnswer && (
                 <div className="mt-8 p-5 bg-emerald-950/40 border border-emerald-500/50 rounded-2xl w-full max-w-2xl">
                   <span className="text-xs text-emerald-400 font-mono uppercase tracking-widest block mb-1 font-bold">Official Answer</span>
-                  <p className="text-2xl font-mono text-emerald-300 font-extrabold">{activeQuestion.answer}</p>
+                  <p className="text-xl font-mono text-emerald-300 font-extrabold whitespace-pre-line">{activeQuestion.answer}</p>
                 </div>
               )}
             </div>
