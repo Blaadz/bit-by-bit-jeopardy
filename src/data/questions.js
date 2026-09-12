@@ -13,7 +13,7 @@ export const initialCategories = [
       {
         id: 'p2',
         value: 200,
-        question: 'What will this program output?\n\nDim total As Integer = 0\nFor i As Integer = 1 To 5\n    If i Mod 2 = 0 Then\n        total += i\n    End If\nNext\nConsole.WriteLine(total)',
+        question: 'What will this program output?\n\ntotal = 0\nfor i in range(1, 6):\n    If i % 2 == 0:\n        total += i\nprint(total)',
         answer: '6',
         completed: false
       },
