@@ -211,7 +211,7 @@ export const initialCategories = [
       {
         id: 'v1',
         value: 100,
-        question: 'In Visual Basic, what will this code display?\n\nDim x As Integer = 5\nDim y As Integer = 3\nConsole.WriteLine(x + y * 2)',
+        question: 'In Visual Basic, what will this code display?\n\nDim x As Integer = 5\nDim y As Integer = 3\nConsole.WriteLine(x + (y * 2))',
         answer: '11',
         completed: false
       },
