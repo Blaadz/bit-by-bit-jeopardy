@@ -3,7 +3,7 @@ export const initialCategories = [
     id: 'prog',
     title: 'Programming',
     questions: [
-      { id: 'p1', value: 100, question: 'What is the output of `print([1, 2, 3][::-1])` in Python?', answer: '[3, 2, 1]', completed: false },
+      { id: 'p1', value: 100, question: 'Question to be added' },
       { id: 'p2', value: 200, question: 'Which data structure operates on a Last-In, First-Out (LIFO) basis?', answer: 'Stack', completed: false },
       { id: 'p3', value: 300, question: 'What is the time complexity of searching in a balanced Binary Search Tree (BST)?', answer: 'O(log n)', completed: false },
       { id: 'p4', value: 400, question: 'What keyword in JavaScript creates a block-scoped variable that cannot be reassigned?', answer: 'const', completed: false },
