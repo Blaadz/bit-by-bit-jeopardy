@@ -3,7 +3,7 @@ import { initialCategories, initialTeams } from './data/questions';
 import { Terminal, RotateCcw, Play, Pause, CheckCircle2, XCircle, Eye, EyeOff, Plus, Minus, Lock, Key } from 'lucide-react';
 
 // SET YOUR MASTER PASSCODE HERE
-const MASTER_PASSCODE = "innoventions2026"; 
+const MASTER_PASSCODE = "Hanahm2008"; 
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
