@@ -194,7 +194,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="flex-1 grid grid-cols-4 gap-4 mb-6">
+      <main className="flex-1 grid grid-cols-6 gap-3 mb-6">
         {categories.map((category) => (
           <div key={category.id} className="flex flex-col gap-3">
             <div className="bg-slate-900 border border-cyan-500/30 p-4 rounded-xl text-center font-bold text-lg text-cyan-300 shadow-lg uppercase tracking-wider font-mono">
@@ -219,7 +219,7 @@ export default function App() {
         ))}
       </main>
 
-      <footer className="grid grid-cols-4 gap-4 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl backdrop-blur-md">
+      <footer className="grid grid-cols-6 gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl backdrop-blur-md">
         {teams.map((team) => (
           <div key={team.id} className="bg-slate-950 border border-slate-800/80 p-3 rounded-xl flex flex-col items-center shadow-inner">
             <span className="text-xs text-slate-400 font-mono uppercase tracking-widest font-bold">{team.name}</span>
