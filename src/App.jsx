@@ -197,7 +197,7 @@ export default function App() {
       <main className="flex-1 grid grid-cols-6 gap-3 mb-6">
         {categories.map((category) => (
           <div key={category.id} className="flex flex-col gap-3">
-            <div className="bg-slate-900 border border-cyan-500/30 p-4 rounded-xl text-center font-bold text-lg text-cyan-300 shadow-lg uppercase tracking-wider font-mono">
+            <div className="h-16 bg-slate-900 border border-cyan-500/30 rounded-xl text-center font-bold text-xs md:text-sm text-cyan-300 shadow-lg uppercase tracking-wider font-mono flex items-center justify-center px-2 leading-tight">
               {category.title}
             </div>
 
