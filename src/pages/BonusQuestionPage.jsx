@@ -5,6 +5,7 @@ export default function BonusQuestionPage({
   question,
   teams,
   completed,
+  regularQuestionsCompleted,
   showAnswer,
   timer,
   isTimerRunning,
@@ -29,11 +30,11 @@ export default function BonusQuestionPage({
               <Trophy className="w-10 h-10" aria-hidden="true" />
             </div>
             <p className="text-xs uppercase tracking-widest text-amber-400 font-bold mb-2">Bonus round finished</p>
-            <h2 id="round-complete-title" className="text-3xl md:text-4xl font-black text-slate-100">Round complete</h2>
-            <p className="text-sm text-slate-400 mt-3">All questions are complete. Here are the final standings.</p>
+            <h2 id="round-complete-title" className="text-3xl md:text-4xl font-black text-slate-100">{regularQuestionsCompleted ? 'Round complete' : 'Bonus complete'}</h2>
+            <p className="text-sm text-slate-400 mt-3">{regularQuestionsCompleted ? 'All questions are complete. Here are the final standings.' : 'The bonus round is complete. Here are the current standings.'}</p>
           </div>
 
-          <ol aria-label="Final standings" className="space-y-3">
+          <ol aria-label={regularQuestionsCompleted ? 'Final standings' : 'Current standings'} className="space-y-3">
             {standings.map((team) => {
               const rank = standings.findIndex((entry) => entry.score === team.score) + 1;
               const isTied = standings.filter((entry) => entry.score === team.score).length > 1;
@@ -49,7 +50,7 @@ export default function BonusQuestionPage({
               );
             })}
           </ol>
-          <p className="text-xs text-slate-500 text-center mt-6">Use Reset Board to start a new game.</p>
+          <p className="text-xs text-slate-500 text-center mt-6">{regularQuestionsCompleted ? 'Use Reset Board to start a new game.' : 'Return to the board to continue regular questions, or reset to start a new game.'}</p>
         </section>
       </main>
     );
@@ -61,7 +62,7 @@ export default function BonusQuestionPage({
         <div className="flex flex-wrap items-start justify-between gap-5 border-b border-slate-800 pb-6">
           <div>
             <p className="flex items-center gap-2 text-xs text-cyan-400 uppercase tracking-widest font-bold mb-3">
-              <CheckCircle2 className="w-4 h-4 shrink-0" aria-hidden="true" /> All regular questions complete
+              <CheckCircle2 className="w-4 h-4 shrink-0" aria-hidden="true" /> {regularQuestionsCompleted ? 'All regular questions complete' : 'Bonus round · Double points'}
             </p>
             <h2 id="bonus-question-title" className="text-3xl md:text-4xl font-black text-amber-400">Bonus Question</h2>
             <div className="flex flex-wrap items-center gap-3 mt-4">

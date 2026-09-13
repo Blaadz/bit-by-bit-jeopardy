@@ -25,19 +25,39 @@ export default function App() {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [bonusCompleted, setBonusCompleted] = useState(false);
+  const [isBonusRoute, setIsBonusRoute] = useState(() => window.location.hash === '#/bonus');
   const allQuestionsCompleted = categories.length > 0 && categories.every(
     (category) => category.questions.every((question) => question.completed)
   );
+  const showBonusPage = allQuestionsCompleted || isBonusRoute;
 
   useEffect(() => {
-    if (!isAuthenticated || !allQuestionsCompleted || bonusCompleted || activeQuestion) return;
+    const handleHashChange = () => {
+      const nextIsBonusRoute = window.location.hash === '#/bonus';
+      if (nextIsBonusRoute === isBonusRoute) return;
+
+      setIsBonusRoute(nextIsBonusRoute);
+      // Navigation leaves the current question unanswered and preserves scores.
+      setActiveQuestion(null);
+      setShowAnswer(false);
+      setSelectedTeam(null);
+      setTimer(30);
+      setIsTimerRunning(false);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [isBonusRoute]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !showBonusPage || bonusCompleted || activeQuestion) return;
 
     setActiveQuestion(bonusRoundQuestion);
     setShowAnswer(false);
     setSelectedTeam(null);
     setTimer(bonusRoundQuestion.timer);
     setIsTimerRunning(false);
-  }, [isAuthenticated, allQuestionsCompleted, bonusCompleted, activeQuestion]);
+  }, [isAuthenticated, showBonusPage, bonusCompleted, activeQuestion]);
 
   useEffect(() => {
     const savedAuth = sessionStorage.getItem('bbb_authorized');
@@ -155,6 +175,8 @@ export default function App() {
 
   const handleResetBoard = () => {
     if (!window.confirm("Reset the board and all team scores?")) return;
+    window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+    setIsBonusRoute(false);
     setCategories(initialCategories);
     setTeams(initialTeams);
     setActiveQuestion(null);
@@ -221,7 +243,16 @@ export default function App() {
           <p className="text-xs text-slate-400 font-mono mt-1">LGS JT Innoventions — Jeopardy Game Master Engine</p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
+          {!allQuestionsCompleted && (
+            <a
+              href={showBonusPage ? '#/' : '#/bonus'}
+              className="flex items-center gap-2 bg-amber-950/40 hover:bg-amber-950 border border-amber-500/40 text-amber-300 text-xs px-4 py-2 rounded-lg font-mono transition"
+            >
+              {showBonusPage ? 'Back to Board' : 'Open Bonus (2x)'}
+            </a>
+          )}
+
           <button
             onClick={() => {
               sessionStorage.removeItem('bbb_authorized');
@@ -242,11 +273,12 @@ export default function App() {
         </div>
       </header>
 
-      {/* The bonus page replaces the board once every regular question is complete. */}
-      {allQuestionsCompleted ? (
+      {/* Open the bonus directly or automatically when the regular board is complete. */}
+      {showBonusPage ? (
         <BonusQuestionPage
           question={bonusRoundQuestion}
           teams={teams}
+          regularQuestionsCompleted={allQuestionsCompleted}
           completed={bonusCompleted}
           showAnswer={showAnswer}
           timer={timer}
