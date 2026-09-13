@@ -350,8 +350,8 @@ Console.WriteLine(total)`,
 ];
 
 export const initialTeams = [
-  { id: 'team-1', name: 'Team 1', score: 0 },
-  { id: 'team-2', name: 'Team 2', score: 0 },
-  { id: 'team-3', name: 'Team 3', score: 0 },
-  { id: 'team-4', name: 'Team 4', score: 0 }
+  { id: 'team-1', name: 'LGS 55 Main Team B', score: 0 },
+  { id: 'team-2', name: 'SAGE Team A', score: 0 },
+  { id: 'team-3', name: 'LGS Gulberg Team A', score: 0 },
+  { id: 'team-4', name: 'ISL RR Team C', score: 0 }
 ];
