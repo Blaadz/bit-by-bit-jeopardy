@@ -78,7 +78,8 @@ export default function App() {
     setActiveQuestion({ ...question, categoryId: catId });
     setShowAnswer(false);
     setSelectedTeam(null);
-    setTimer(30);
+    // Dynamically sets timer according to each question's specified time limit
+    setTimer(question.timer || 30);
     setIsTimerRunning(true);
   };
 
@@ -194,11 +195,10 @@ export default function App() {
         </div>
       </header>
 
-      {/* 6 Category Columns Grid */}
+      {/* Grid of 6 Category Columns */}
       <main className="flex-1 grid grid-cols-6 gap-3 mb-6">
         {categories.map((category) => (
           <div key={category.id} className="flex flex-col gap-3">
-            {/* Category Header Box with Symmetrical Height */}
             <div className="h-16 bg-slate-900 border border-cyan-500/30 rounded-xl text-center font-bold text-xs md:text-sm text-cyan-300 shadow-lg uppercase tracking-wider font-mono flex items-center justify-center px-2 leading-tight">
               {category.title}
             </div>
@@ -221,7 +221,7 @@ export default function App() {
         ))}
       </main>
 
-      {/* Centered Footer */}
+      {/* Centered Scorecard Footer */}
       <footer className="w-full flex justify-center">
         <div className="grid grid-cols-4 gap-4 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl backdrop-blur-md max-w-4xl w-full">
           {teams.map((team) => (
@@ -275,7 +275,8 @@ export default function App() {
                 </button>
                 <button
                   onClick={() => {
-                    setTimer(30);
+                    // Resets back to this question's initial assigned time limit
+                    setTimer(activeQuestion?.timer || 30);
                     setIsTimerRunning(false);
                   }}
                   className="bg-slate-900 hover:bg-slate-800 text-slate-400 p-2 rounded-lg transition"
@@ -287,14 +288,14 @@ export default function App() {
             </div>
 
             <div className="my-8 flex flex-col items-center justify-center text-center px-4">
-              <p className="text-2xl md:text-3xl font-bold leading-relaxed text-slate-50 tracking-wide font-sans whitespace-pre-line">
+              <p className="text-lg md:text-xl font-bold leading-relaxed text-cyan-300 font-mono whitespace-pre text-left max-w-full overflow-x-auto bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-inner">
                 {activeQuestion.question}
               </p>
 
               {showAnswer && (
-                <div className="mt-8 p-5 bg-emerald-950/40 border border-emerald-500/50 rounded-2xl w-full max-w-2xl">
+                <div className="mt-8 p-5 bg-emerald-950/40 border border-emerald-500/50 rounded-2xl w-full max-w-2xl text-left">
                   <span className="text-xs text-emerald-400 font-mono uppercase tracking-widest block mb-1 font-bold">Official Answer</span>
-                  <p className="text-xl font-mono text-emerald-300 font-extrabold whitespace-pre-line">{activeQuestion.answer}</p>
+                  <p className="text-lg font-mono text-emerald-300 font-extrabold whitespace-pre-line">{activeQuestion.answer}</p>
                 </div>
               )}
             </div>
