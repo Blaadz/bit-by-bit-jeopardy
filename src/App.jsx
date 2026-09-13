@@ -288,7 +288,7 @@ export default function App() {
             </div>
 
             <div className="my-8 flex flex-col items-center justify-center text-center px-4">
-              <p className="text-lg md:text-xl font-bold leading-relaxed text-cyan-300 font-mono whitespace-pre text-left max-w-full overflow-x-auto bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-inner">
+              <p className="text-lg md:text-xl font-bold leading-relaxed text-cyan-300 font-mono whitespace-pre-wrap break-words text-left max-w-full bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-inner">
                 {activeQuestion.question}
               </p>
 
