@@ -349,6 +349,28 @@ Console.WriteLine(total)`,
   }
 ];
 
+// Edit this sample to set the final bonus question, answer, time, and base points.
+// The bonus is worth twice the highest regular question value by default.
+export const bonusQuestion = {
+  id: 'bonus-final',
+  baseValue: 500,
+  multiplier: 2,
+  timer: 90,
+  question: `What will this Python code output, and why?
+
+numbers = [2, 3, 2, 5, 3]
+seen = set()
+total = 0
+
+for number in numbers:
+    if number not in seen:
+        total += number * number
+        seen.add(number)
+
+print(total)`,
+  answer: '38. Each distinct number is squared and added only once: 2² + 3² + 5² = 4 + 9 + 25 = 38.',
+};
+
 export const initialTeams = [
   { id: 'team-1', name: 'LGS 55 Main Team B', score: 0 },
   { id: 'team-2', name: 'SAGE Team A', score: 0 },

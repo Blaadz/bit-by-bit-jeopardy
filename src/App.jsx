@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { initialCategories, initialTeams } from './data/questions';
+import { bonusQuestion, initialCategories, initialTeams } from './data/questions';
+import BonusQuestionPage from './pages/BonusQuestionPage';
 import { Terminal, RotateCcw, Play, Pause, CheckCircle2, XCircle, Eye, EyeOff, Plus, Minus, Lock, Key } from 'lucide-react';
 
 // SET YOUR MASTER PASSCODE HERE
-const MASTER_PASSCODE = "Hanahm2008"; 
+const MASTER_PASSCODE = "Hanahm2008";
+
+const bonusRoundQuestion = {
+  ...bonusQuestion,
+  value: bonusQuestion.baseValue * bonusQuestion.multiplier,
+  isBonus: true,
+};
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -17,6 +24,20 @@ export default function App() {
   const [timer, setTimer] = useState(30);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
+  const [bonusCompleted, setBonusCompleted] = useState(false);
+  const allQuestionsCompleted = categories.length > 0 && categories.every(
+    (category) => category.questions.every((question) => question.completed)
+  );
+
+  useEffect(() => {
+    if (!isAuthenticated || !allQuestionsCompleted || bonusCompleted || activeQuestion) return;
+
+    setActiveQuestion(bonusRoundQuestion);
+    setShowAnswer(false);
+    setSelectedTeam(null);
+    setTimer(bonusRoundQuestion.timer);
+    setIsTimerRunning(false);
+  }, [isAuthenticated, allQuestionsCompleted, bonusCompleted, activeQuestion]);
 
   useEffect(() => {
     const savedAuth = sessionStorage.getItem('bbb_authorized');
@@ -42,9 +63,14 @@ export default function App() {
 
     const handleKeyDown = (e) => {
       if (!activeQuestion) return;
+      if (e.target instanceof HTMLElement && (
+        e.target.matches('input, textarea, select') || e.target.isContentEditable
+      )) return;
+
+      if (['Space', 'KeyA', 'Escape'].includes(e.code)) e.preventDefault();
+      if (e.repeat) return;
 
       if (e.code === 'Space') {
-        e.preventDefault();
         setIsTimerRunning((prev) => !prev);
       } else if (e.code === 'KeyA') {
         setShowAnswer((prev) => !prev);
@@ -92,7 +118,9 @@ export default function App() {
   };
 
   const handleCloseQuestion = () => {
-    if (activeQuestion) {
+    if (activeQuestion?.isBonus) {
+      setBonusCompleted(true);
+    } else if (activeQuestion) {
       setCategories((prevCategories) =>
         prevCategories.map((cat) => {
           if (cat.id === activeQuestion.categoryId) {
@@ -110,6 +138,30 @@ export default function App() {
     setActiveQuestion(null);
     setShowAnswer(false);
     setSelectedTeam(null);
+    setIsTimerRunning(false);
+  };
+
+  const handleCorrectAnswer = () => {
+    if (!activeQuestion || !selectedTeam) return;
+    handleScoreChange(selectedTeam, activeQuestion.value);
+    handleCloseQuestion();
+  };
+
+  const handleIncorrectAnswer = () => {
+    if (!activeQuestion || !selectedTeam) return;
+    handleScoreChange(selectedTeam, -activeQuestion.value);
+    setSelectedTeam(null);
+  };
+
+  const handleResetBoard = () => {
+    if (!window.confirm("Reset the board and all team scores?")) return;
+    setCategories(initialCategories);
+    setTeams(initialTeams);
+    setActiveQuestion(null);
+    setBonusCompleted(false);
+    setShowAnswer(false);
+    setSelectedTeam(null);
+    setTimer(30);
     setIsTimerRunning(false);
   };
 
@@ -161,7 +213,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 flex flex-col justify-between selection:bg-cyan-500 selection:text-black">
-      <header className="flex justify-between items-center border-b border-slate-800 pb-4 mb-6">
+      <header className="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4 mb-6">
         <div>
           <h1 className="text-3xl font-extrabold tracking-wider text-cyan-400 flex items-center gap-2 font-mono">
             <Terminal className="w-8 h-8" /> BIT BY BIT
@@ -174,6 +226,7 @@ export default function App() {
             onClick={() => {
               sessionStorage.removeItem('bbb_authorized');
               setIsAuthenticated(false);
+              setIsTimerRunning(false);
             }}
             className="flex items-center gap-2 bg-slate-900 hover:bg-rose-950 border border-slate-700 hover:border-rose-700 text-slate-300 hover:text-rose-300 text-xs px-3 py-2 rounded-lg font-mono transition"
           >
@@ -181,13 +234,7 @@ export default function App() {
           </button>
 
           <button
-            onClick={() => {
-              if (window.confirm("Reset the board and all team scores?")) {
-                setCategories(initialCategories);
-                setTeams(initialTeams);
-                setActiveQuestion(null);
-              }
-            }}
+            onClick={handleResetBoard}
             className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs px-4 py-2 rounded-lg font-mono transition"
           >
             <RotateCcw className="w-4 h-4 text-cyan-400" /> Reset Board
@@ -195,7 +242,28 @@ export default function App() {
         </div>
       </header>
 
-      {/* Grid of 6 Category Columns */}
+      {/* The bonus page replaces the board once every regular question is complete. */}
+      {allQuestionsCompleted ? (
+        <BonusQuestionPage
+          question={bonusRoundQuestion}
+          teams={teams}
+          completed={bonusCompleted}
+          showAnswer={showAnswer}
+          timer={timer}
+          isTimerRunning={isTimerRunning}
+          selectedTeam={selectedTeam}
+          onSelectTeam={setSelectedTeam}
+          onToggleAnswer={() => setShowAnswer((previous) => !previous)}
+          onToggleTimer={() => setIsTimerRunning((previous) => !previous)}
+          onResetTimer={() => {
+            setTimer(bonusRoundQuestion.timer);
+            setIsTimerRunning(false);
+          }}
+          onCorrect={handleCorrectAnswer}
+          onIncorrect={handleIncorrectAnswer}
+          onFinish={handleCloseQuestion}
+        />
+      ) : (
       <main className="flex-1 grid grid-cols-6 gap-3 mb-6">
         {categories.map((category) => (
           <div key={category.id} className="flex flex-col gap-3">
@@ -220,10 +288,11 @@ export default function App() {
           </div>
         ))}
       </main>
+      )}
 
       {/* Centered Scorecard Footer */}
       <footer className="w-full flex justify-center">
-        <div className="grid grid-cols-4 gap-4 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl backdrop-blur-md max-w-4xl w-full">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl backdrop-blur-md max-w-4xl w-full">
           {teams.map((team) => (
             <div key={team.id} className="bg-slate-950 border border-slate-800/80 p-3 rounded-xl flex flex-col items-center shadow-inner">
               <span className="text-xs text-slate-400 font-mono uppercase tracking-widest font-bold">{team.name}</span>
@@ -252,7 +321,7 @@ export default function App() {
       </footer>
 
       {/* Question Overlay Modal */}
-      {activeQuestion && (
+      {activeQuestion && !activeQuestion.isBonus && (
         <div className="fixed inset-0 bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-6 z-50">
           <div className="bg-slate-900 border border-cyan-500/40 rounded-3xl max-w-4xl w-full p-8 shadow-2xl flex flex-col justify-between min-h-[580px]">
             <div className="flex justify-between items-center border-b border-slate-800 pb-4">
@@ -332,19 +401,13 @@ export default function App() {
                 {selectedTeam && (
                   <>
                     <button
-                      onClick={() => {
-                        handleScoreChange(selectedTeam, activeQuestion.value);
-                        handleCloseQuestion();
-                      }}
+                      onClick={handleCorrectAnswer}
                       className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition"
                     >
                       <CheckCircle2 className="w-5 h-5" /> Correct (+${activeQuestion.value})
                     </button>
                     <button
-                      onClick={() => {
-                        handleScoreChange(selectedTeam, -activeQuestion.value);
-                        setSelectedTeam(null);
-                      }}
+                      onClick={handleIncorrectAnswer}
                       className="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-mono font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-rose-600/20 transition"
                     >
                       <XCircle className="w-5 h-5" /> Incorrect (-${activeQuestion.value})
